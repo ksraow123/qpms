@@ -78,4 +78,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentVo> getAppointmentDshBoard() {
         return appointmentDao.getAppointmentDetailsList();
     }
+
+    @Override
+    public UserData saveuserData(UserData userData) {
+      return   bulkAppointmentRepository.save(userData);
+    }
 }

@@ -11,4 +11,6 @@ public interface SubjectsService {
     Subjects getSubjectById(String subjectId);
 
     Subjects getSubject_code(String subjectCode);
+
+    List<Subjects> getSubjectsByCourseId(String courseId);
 }
