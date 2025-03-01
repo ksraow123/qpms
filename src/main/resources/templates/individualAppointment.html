@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="container-fluid p-3">
+  <div class="row">
+    <div class="col-12">
+      <div class="cards">
+        <div class="card border-0">
+          <h2>Paper Setter / Moderator Appointment </h2>
+          <form th:action="@{/appointments/save}"  method="post" >
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <div class="mb-3">
+
+                  <label for="" class="form-label">Type</label>
+                  <select class="form-select"  >
+                    <option value="0">Select</option>
+                    <option value="2">Paper Setter </option>
+                    <option value="3">Paper Moderator </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Mobile No.</label>
+                  <input class="form-control" type="text"  >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Name</label>
+                  <input class="form-control" type="text"  >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Email ID</label>
+                  <input class="form-control" type="text" >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Institute/College Code</label>
+                  <select class="form-select"   >
+                    <option value="">Select</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Regulation </label>
+                  <select class="form-select" id="regulation" >
+                    <option value="0">Select</option>
+                    <option value="R24">R24 </option>
+                    <option value="R25">R25 </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Course Code</label>
+                  <select class="form-select" id="courseCode" >
+                    <option value="0">Select</option>
+
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Subject Code-Name </label>
+                  <select class="form-select" id="subjectCode"  required>
+                    <option value="0">Select</option>
+
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">No. of Sets   </label>
+
+                  <input class="form-control" type="text"  >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Office Order Date  </label>
+                  <input type="date" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Last Date of Submission   </label>
+                  <input type="date" class="form-control"  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="" class="form-label">Curriculum / Syllabus </label>
+                  <input class="form-control" type="text" placeholder="Computer" disabled>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="mb-3">
+                  <button class="btn btn-primary">Generate order and Send Email</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
