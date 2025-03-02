@@ -25,4 +25,9 @@ public class SubjectsServiceImpl implements SubjectsService {
     public Subjects getSubject_code(String subjectCode) {
         return subjectsRepository.findBySubjectCode(subjectCode);
     }
+
+    @Override
+    public List<Subjects> getSubjectsByCourseId(String courseId) {
+        return subjectsRepository.findByCourseId(courseId);
+    }
 }

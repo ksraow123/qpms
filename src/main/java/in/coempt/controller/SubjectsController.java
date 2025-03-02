@@ -17,9 +17,9 @@ public class SubjectsController {
 @Autowired
 private SubjectsService subjectsService;
 
-    @GetMapping("/subjects/{courseId}/{regulation}")
+    @GetMapping("/subjects/{courseId}")
     @ResponseBody
-    public List<Subjects> getSubjectsByCourse(@PathVariable String courseId,@PathVariable String regulation) {
-        return subjectsService.getSubjectsByCourseIdAndRegulation(courseId,regulation);
+    public List<Subjects> getSubjectsByCourse(@PathVariable String courseId) {
+        return subjectsService.getSubjectsByCourseId(courseId);
     }
 }

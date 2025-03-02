@@ -27,4 +27,6 @@ public interface AppointmentService {
     List<AppointmentVo> getAppointmentDetailsList(List<Long> selectedIds);
 
     List<AppointmentVo> getAppointmentDshBoard();
+
+    UserData saveuserData(UserData userData);
 }

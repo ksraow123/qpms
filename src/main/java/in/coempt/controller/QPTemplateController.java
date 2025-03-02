@@ -69,68 +69,39 @@ private SetterModeratorService setterModeratorService;
 
     @Value("${filePath}")
     private String filePath;
-
-    @GetMapping("/bitwisequestionsList/{subjectId}")
-    public String getBitwiseQuestionsList(@PathVariable String subjectId, Model model) {
+    @GetMapping("/bitwisequestionsList")
+    public String getBitwiseQuestions(
+            @RequestParam("id") int setNo,
+            @RequestParam("subjectId") String subjectId,
+            Model model) {
         UserDetails user = (UserDetails) SecurityUtil.getLoggedUserDetails().getPrincipal();
         //Appointment appointment = appointmentService.getAppointmentDetails(user.getUsername());
         Subjects subjects = subjectsService.getSubjectById(subjectId);
         model.addAttribute("subject", subjects);
-        List<BitwiseQuestions> qPtemplate = qpTemplateService.getBitWiseQuestionTemplate(Integer.parseInt(subjectId));
+        List<BitwiseQuestions> qPtemplate = qpTemplateService.getQuestionsList(subjectId,setNo);
         model.addAttribute("qPtemplate", qPtemplate);
-        model.addAttribute("allDescFilled", qPtemplate.stream().allMatch(q -> q.getQ_desc() != null && !q.getQ_desc().isEmpty()));
-        Map<Integer, List<BitwiseQuestions>> groupedBySetNo = qPtemplate.stream()
-                .collect(Collectors.groupingBy(BitwiseQuestions::getSetNo));
-
-        Map<Integer, Boolean> setSubjects = new HashMap<>();
-
-        for (Map.Entry<Integer, List<BitwiseQuestions>> entry : groupedBySetNo.entrySet()) {
-            boolean allEmpty = entry.getValue().stream()
-                    .allMatch(q -> q.getQ_desc() == null || q.getQ_desc().trim().isEmpty());
-
-            setSubjects.put(entry.getKey(), allEmpty);
-        }
-
-        model.addAttribute("setSubjects", setSubjects);
-        model.addAttribute("groupedBySetNo", groupedBySetNo);
+        model.addAttribute("setNo", setNo);
         //model.addAttribute("page", "QPTemplate");
         return "QPTemplate";
 
     }
 
-    @GetMapping("/reviewerQuestionsList/{subjectId}")
-    public String reviewerQuestionsList(@PathVariable("subjectId") String subjectId, Model model) {
+    @GetMapping("/reviewerQuestionsList")
+    public String reviewerQuestionsList(
+                                        @RequestParam("id") int setNo,
+                                        @RequestParam("subjectId") String subjectId,
+                                        Model model) {
         UserDetails user = (UserDetails) SecurityUtil.getLoggedUserDetails().getPrincipal();
 
         User userEntity = userService.getUserByUserName(user.getUsername());
       //  Appointment appointment = appointmentService.getAppointmentDetails(user.getUsername());
         Subjects subjects = subjectsService.getSubjectById(subjectId);
-        List<BitwiseQuestions> qPtemplate = qpTemplateService.getBitWiseQuestionReviewerTemplate(Integer.parseInt(subjectId), Math.toIntExact(userEntity.getId()));
-        Map<Integer, List<BitwiseQuestions>> groupedBySetNo = qPtemplate.stream()
-                .collect(Collectors.groupingBy(BitwiseQuestions::getSetNo));
-
-        Map<Integer, Boolean> setSubjects = new HashMap<>();
-        for (Map.Entry<Integer, List<BitwiseQuestions>> entry : groupedBySetNo.entrySet()) {
-            boolean allEmpty = entry.getValue().stream()
-                    .allMatch(q -> q.getQ_desc() == null || q.getQ_desc().trim().isEmpty());
-            setSubjects.put(entry.getKey(), allEmpty);
-        }
-
-        // Grouping by set number, then by question number
-        Map<Integer, Map<Integer, List<BitwiseQuestions>>> groupedBySetAndQuestionNo = qPtemplate.stream()
-                .collect(Collectors.groupingBy(
-                        BitwiseQuestions::getSetNo,  // First level grouping: Set Number
-                        Collectors.groupingBy(BitwiseQuestions::getQ_no) // Second level grouping: Question Number
-                ));
-
-
+        List<BitwiseQuestions> qPtemplate = qpTemplateService.getQuestionsList(subjectId,setNo);
 
         model.addAttribute("qPtemplate", qPtemplate);
-        model.addAttribute("groupedBySetAndQuestionNo", groupedBySetAndQuestionNo);
         model.addAttribute("subject", subjects);
-        model.addAttribute("setSubjects", setSubjects);
-        model.addAttribute("groupedBySetNo", groupedBySetNo);
-      //  model.addAttribute("page", "reviewerQPTemplate");
+        model.addAttribute("setNo", setNo);
+
         return "reviewerQPTemplate";
 
     }
@@ -359,7 +330,7 @@ private SetterModeratorService setterModeratorService;
         rqpFilesEntity.setRemarks("");
         qpFilesService.saveQPs(rqpFilesEntity);
 
-        return "redirect:/bitwisequestionsList/"+subjectId;
+        return "redirect:/setterdashboard";
 
     }
 
@@ -395,10 +366,10 @@ private SetterModeratorService setterModeratorService;
             }
             qpTemplateService.saveQuestion(question);
             if (roles.getId() == 2) {
-                return "redirect:/bitwisequestionsList/"+question.getSubjectId();
+                return "redirect:/bitwisequestionsList?id="+question.getSetNo()+"&subjectId="+question.getSubjectId();
             }
             if (roles.getId() == 3) {
-                return "redirect:/reviewerQuestionsList/"+question.getSubjectId();
+                return "redirect:/reviewerQuestionsList?id="+question.getSetNo()+"&subjectId="+question.getSubjectId();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -417,10 +388,10 @@ private SetterModeratorService setterModeratorService;
             question.setQp_reviewer_status("Approved");
             qpTemplateService.saveQuestion(question);
             if (roles.getId() == 2) {
-                return "redirect:/bitwisequestionsList/"+question.getSubjectId();
+                return "redirect:/bitwisequestionsList?id="+question.getSetNo()+"&subjectId="+question.getSubjectId();
             }
             if (roles.getId() == 3) {
-                return "redirect:/reviewerQuestionsList/"+question.getSubjectId();
+                return "redirect:/reviewerQuestionsList?id="+question.getSetNo()+"&subjectId="+question.getSubjectId();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -440,7 +411,7 @@ private SetterModeratorService setterModeratorService;
         question.setQp_reviewer_status(approved);
         question.setReviewer_comments(comments);
         qpTemplateService.saveQuestion(question);
-        return "redirect:/reviewerQuestionsList/"+question.getSubjectId();
+        return "redirect:/reviewerQuestionsList?id="+question.getSetNo()+"&subjectId="+question.getSubjectId();
     }
 
     @PostMapping("/setWiseReviewerApproval")
@@ -458,7 +429,7 @@ private SetterModeratorService setterModeratorService;
         qpFilesEntity.setRemarks(comments);
         qpFilesService.saveQPs(qpFilesEntity);
 
-        return "redirect:/reviewerQuestionsList/"+subjectId;
+        return "redirect:/reviewerQuestionsList?id="+setId+"&subjectId="+subjectId;
     }
 
 

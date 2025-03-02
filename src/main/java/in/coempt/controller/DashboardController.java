@@ -26,7 +26,10 @@ public class DashboardController {
         UserDetails user=(UserDetails) SecurityUtil.getLoggedUserDetails().getPrincipal();
         User userEntity = userRepository.findByUserName(user.getUsername());
       List<QPSetterDashBoardVo>  qpSetterDashBoardList= dashBoardService.getQPSetterDashBord(userEntity.getUserName(),userEntity.getId());
+
+        List<QPSetterDashBoardVo>  setwiseDashBoard= dashBoardService.getSetWiseQPDashBoard(userEntity.getId());
 model.addAttribute("qpSetterDashBoardList",qpSetterDashBoardList);
+model.addAttribute("setwiseDashBoard",setwiseDashBoard);
         model.addAttribute("page","setterDashBoard");
 return "main";
 
@@ -37,7 +40,10 @@ return "main";
         UserDetails user=(UserDetails) SecurityUtil.getLoggedUserDetails().getPrincipal();
         User userEntity = userRepository.findByUserName(user.getUsername());
         List<QPSetterDashBoardVo>  qpModeratorDashBoardList= dashBoardService.getQPModeratorDashBord(userEntity.getUserName(),userEntity.getId());
+        List<QPSetterDashBoardVo>  setWiseReviewerQPDashBoard= dashBoardService.getSetWiseReviewerQPDashBoard(userEntity.getUserName(),userEntity.getId());
+
         model.addAttribute("qpModeratorDashBoardList",qpModeratorDashBoardList);
+        model.addAttribute("setWiseReviewerQPDashBoard",setWiseReviewerQPDashBoard);
         model.addAttribute("page","moderatorDashBoard");
         return "main";
 
