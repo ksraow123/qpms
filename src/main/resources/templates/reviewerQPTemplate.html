@@ -63,6 +63,9 @@
                             <h2>
                                 <span th:text="${subject.subjectCode}"> </span>-
                                 <span th:text="${subject.subject_name}"></span>
+                                Max Marks: <span th:text="${subject.max_marks}"></span>
+                                <a th:if="${subject.syllabus}" th:href="@{${subject.syllabus}}" target="_blank" title="View Syllabus">(View Syllabus)</a>
+                                <span th:unless="${subject.syllabus}">(No syllabus available)</span>
                             </h2>
 
                             <!-- Modal or Form Container -->
@@ -133,9 +136,8 @@
                             <div class="col-12">
 
                                     <h2>Set No: <b th:text="${setNo}"></b></h2>
-                                    <h2> <a th:if="${subject.syllabus}" th:href="@{${subject.syllabus}}" target="_blank" title="View Syllabus">View Syllabus</a>
-                                        <span th:unless="${subject.syllabus}">No syllabus available</span></h2>
-                                    <table class="table table-bordered" id="example">
+
+                                    <table class="table table-bordered" id="search">
                                         <thead>
                                         <tr>
                                             <th>S.No.</th>
@@ -187,12 +189,12 @@
                                                 <a href="#" class="btn btn-sm btn-warning" title="Approve"
                                                    th:data-id="${setNo} + '/' + ${subject.id}"
                                                    onclick="openSetWiseApprovalModal(this,'a')">
-                                                    Approve
+                                                    Approved - Send to Admin
                                                 </a>
                                                 <a href="#" class="btn btn-sm btn-warning" title="Approve"
                                                    th:data-id="${setNo} + '/' + ${subject.id}"
                                                    onclick="openSetWiseApprovalModal(this,'r')">
-                                                    Reject
+                                                    Rejected - Send to Admin
                                                 </a>
 
                                     </table>

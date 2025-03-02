@@ -43,7 +43,8 @@
 <body>
 <h2>
     <span th:text="${subjects.subjectCode}"> </span>-
-    <span th:text="${subjects.subject_name}"></span>
+    <span th:text="${subjects.subject_name}"></span>:
+    Max Marks:<span th:text="${subjects.max_marks}"></span>
 </h2>
 <!-- Watermark Container -->
 <div class="watermarked" id="watermark" th:attr="data-watermark=${watermark}"></div>
@@ -108,7 +109,7 @@
                         <th:block th:if="${entry.key == lst.question_no}">
                             <tr th:each="question : ${entry.value}">
                                 <td valign="top"></td>
-                                <td valign="top"><b th:text="${question.bit_no}"></b></td>
+                                <td valign="top"><b th:text="${question.bit_no}"></b>)</td>
                                 <td valign="top"><span th:utext="${question.q_desc}"></span></td>
 
                                 <!-- Display image if exists -->

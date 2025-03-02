@@ -291,7 +291,7 @@ private SetterModeratorService setterModeratorService;
         List<BitwiseQuestions> questionsList = qpTemplateService.getQuestionsList(subjectId,id);
         SetterModeratorMapping setterModeratorMapping=setterModeratorService.getReviewerDetails(user.getId(), Long.valueOf(subjectId));
         questionsList.forEach(question -> {
-            question.setQp_setter_status("Forwarded");
+            question.setQp_setter_status("FORWARDED");
             question.setQp_setter_id(String.valueOf(user.getId()));
 
             question.setQpReviewerId(Integer.parseInt(setterModeratorMapping.getModeratorId()+""));
@@ -334,6 +334,54 @@ private SetterModeratorService setterModeratorService;
 
     }
 
+    @GetMapping("/reviewForward/{id}/{subjectId}")
+    @Transactional
+    public String reviewForward( @PathVariable("id") int id,@PathVariable("subjectId") String subjectId) {
+        UserDetails userDetails = (UserDetails) SecurityUtil.getLoggedUserDetails().getPrincipal();
+        User user = userService.getUserByUserName(userDetails.getUsername());
+
+        Subjects subjects = subjectsService.getSubjectById(subjectId);
+
+        QPFilesEntity qpFilesEntity = qpFilesService.getQPFilesByUser(user.getId(),subjectId,id);
+        if(qpFilesEntity==null){
+            qpFilesEntity=new QPFilesEntity();
+        }
+        else {
+            qpFilesEntity.setId(qpFilesEntity.getId());
+        }
+        qpFilesEntity.setSetNo(id);
+        qpFilesEntity.setQp_status("FORWARDED");
+        qpFilesEntity.setUserId(user.getId());
+        qpFilesEntity.setSubjectId(Long.valueOf(subjectId));
+        qpFilesEntity.setRollId(user.getRoleId());
+        qpFilesEntity.setQp_status_date(LocalDateTime.now() + "");
+        qpFilesEntity.setRemarks("");
+        qpFilesService.saveQPs(qpFilesEntity);
+        QPFilesEntity rqpFilesEntity = qpFilesService.getQPFilesByUser(subjects.getSection_user_id(),subjectId,id);
+        if(rqpFilesEntity==null){
+            rqpFilesEntity=new QPFilesEntity();
+        }
+        else {
+            rqpFilesEntity.setId(rqpFilesEntity.getId());
+        }
+        rqpFilesEntity.setSetNo(id);
+        rqpFilesEntity.setQp_status("PENDING");
+        rqpFilesEntity.setUserId(subjects.getSection_user_id());
+        rqpFilesEntity.setRollId(1);
+        rqpFilesEntity.setSubjectId(Long.valueOf(subjectId));
+        rqpFilesEntity.setQp_status_date(LocalDateTime.now() + "");
+        rqpFilesEntity.setRemarks("");
+        qpFilesService.saveQPs(rqpFilesEntity);
+
+        return "redirect:/moderatordashboard";
+
+    }
+
+
+
+
+
+
     @PostMapping("/updateQuestions")
     public String updateQuestions(
             @RequestParam("q_desc") String questionDescription,
@@ -369,7 +417,7 @@ private SetterModeratorService setterModeratorService;
                 return "redirect:/bitwisequestionsList?id="+question.getSetNo()+"&subjectId="+question.getSubjectId();
             }
             if (roles.getId() == 3) {
-                return "redirect:/reviewerQuestionsList?id="+question.getSetNo()+"&subjectId="+question.getSubjectId();
+                return "redirect:/forwardQuestions/"+question.getSetNo()+"/"+question.getSubjectId();
             }
         } catch (Exception e) {
             e.printStackTrace();

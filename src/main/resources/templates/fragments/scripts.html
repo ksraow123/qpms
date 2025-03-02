@@ -30,7 +30,15 @@
             }
         });
         </script>
-
+        <script type="text/javascript">
+            new DataTable('#search', {
+            layout: {
+                topStart: {
+                   // buttons: ['copy', 'excel', 'pdf', 'colvis']
+                }
+            }
+        });
+        </script>
 
         <!-- Custom JavaScript -->
         <script th:src="@{/js/common.js}"></script>

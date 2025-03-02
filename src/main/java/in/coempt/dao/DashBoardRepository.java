@@ -37,10 +37,11 @@ public class DashBoardRepository {
                 "    tc.course_name,\n" +
                 "    ts.year,\n" +
                 "    ts.semester,\n" +
-                "    ns.n as setno,(SELECT count(id) FROM qp_set_bit_wise_questions\n" +
-                "    where  set_no=ns.n and subject_id=ts.id and q_desc is not null) as no_of_questions ,\n" +
-                "(SELECT qp_status FROM tbl_qp_files where user_id=? and set_no=ns.n and subject_id=ts.id and qp_status='FORWARDED')\n" +
-                " as qp_status ,\n" +
+                "    ns.n as setno, " +
+                "(SELECT count(id) FROM qp_set_bit_wise_questions where  set_no=ns.n and subject_id=ts.id and q_desc is  null) as pending_questions," +
+                "(SELECT count(id) FROM qp_set_bit_wise_questions where  set_no=ns.n and subject_id=ts.id) as total_questions,\n" +
+                "(SELECT count(id) FROM qp_set_bit_wise_questions where  set_no=ns.n and subject_id=ts.id and q_desc is not null) as no_of_questions ,\n" +
+                "(SELECT qp_status FROM tbl_qp_files where user_id=? and set_no=ns.n and subject_id=ts.id) as qp_status ,\n" +
                 "  qp.last_date_to_submit AS submission_date\n" +
                 "FROM tbl_appointments_bulk qp\n" +
                 "JOIN tbl_subjects ts ON ts.id = qp.subject_id\n" +
@@ -55,9 +56,12 @@ public List<QPSetterDashBoardVo> getSetWiseReviewerQPDashBoard(Long userId) {
                 "    tc.course_name,\n" +
                 "    ts.year,\n" +
                 "    ts.semester,\n" +
-                "    ns.n as setno,(SELECT count(id) FROM qp_set_bit_wise_questions\n" +
-                "    where  set_no=ns.n and subject_id=ts.id and qp_reviewer_status='Approved') as no_of_questions ,\n" +
-                "(SELECT qp_status FROM tbl_qp_files where user_id=? and set_no=ns.n and subject_id=ts.id and qp_status='APPROVED')\n" +
+                "    ns.n as setno," +
+                "(SELECT count(id) FROM qp_set_bit_wise_questions where  set_no=ns.n and subject_id=ts.id and qp_reviewer_id=qp.user_id) as total_questions ," +
+                "(SELECT count(id) FROM qp_set_bit_wise_questions where  set_no=ns.n and subject_id=ts.id and qp_reviewer_id=qp.user_id and qp_reviewer_status is null) as pending_questions ," +
+                "(SELECT count(id) FROM qp_set_bit_wise_questions\n" +
+                "    where  set_no=ns.n and subject_id=ts.id and qp_reviewer_id=qp.user_id and qp_reviewer_status='Approved') as no_of_questions ,\n" +
+                "(SELECT qp_status FROM tbl_qp_files where user_id=? and set_no=ns.n and subject_id=ts.id)\n" +
                 " as qp_status ,\n" +
                 "  qp.last_date_to_submit AS submission_date\n" +
                 "FROM tbl_appointments_bulk qp\n" +

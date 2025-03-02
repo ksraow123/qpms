@@ -17,4 +17,5 @@ public class Subjects {
     @Column(name = "subject_code")
     private String subjectCode;
     private String syllabus;
+    private Long section_user_id;
 }

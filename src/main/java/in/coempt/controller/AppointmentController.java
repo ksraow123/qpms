@@ -192,11 +192,12 @@ this.userDetailsService=userDetailsService;
     @GetMapping("/{orderId}/{userName}/accept")
     public String acceptAppointment(@PathVariable Long orderId, @PathVariable String userName,Model model) {
         UserData appointment = appointmentService.getAppointmentDetailsById(orderId);
-        updateAppointmentStatus(orderId, userName,"Accepted");
+        String customPassword = RandomUtils.nextLong(10000, 99999) + "";
+        updateAppointmentStatus(orderId, userName,"Accepted",customPassword);
         model.addAttribute("acceptStatus", "Accepted");
         Roles roles = rolesService.getRoleDetails(appointment.getRole_id());
         Subjects subjects = subjectsService.getSubjectById(appointment.getSubject_id()+"");
-        String customPassword = RandomUtils.nextLong(10000, 99999) + "";
+
         User user = userService.getUserByUserName(userName);
         String emailBody = "<html><body>" +
                 "<p>You are appointed as a <strong>" + roles.getRole() + "</strong> for the " +
@@ -213,7 +214,7 @@ this.userDetailsService=userDetailsService;
 
     @GetMapping("/{orderId}/{userName}/decline")
     public String declineAppointment(@PathVariable Long orderId,String userName, Model model) {
-        updateAppointmentStatus(orderId, userName,"Declined");
+        updateAppointmentStatus(orderId, userName,"Declined","123");
         model.addAttribute("acceptStatus", "Declined");
         return "appointment-status";
     }
@@ -256,7 +257,7 @@ this.userDetailsService=userDetailsService;
         user.setPassword(passwordEncoder.encode(RandomUtils.nextLong(10000, 99999) + ""));
     }
 
-    private void updateAppointmentStatus(Long orderId,String userName, String status) {
+    private void updateAppointmentStatus(Long orderId,String userName, String status,String password) {
         UserData appointment = appointmentService.getAppointmentDetailsById(orderId);
         appointment.setStatus_date(LocalDateTime.now().toString());
         appointment.setCurrent_status(status);
@@ -267,6 +268,7 @@ this.userDetailsService=userDetailsService;
         if ("Accepted".equals(status)) {
             User user = userService.getUserByUserName(userName);
             user.setIsActive(1);
+            user.setPassword(passwordEncoder.encode(password));
             userService.saveUser(user);
         }
     }

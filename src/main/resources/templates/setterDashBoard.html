@@ -16,14 +16,14 @@
                                 <tr>
                                     <th>Course Name</th>
                                     <th>Year</th>
-                                    <th>Semester</th>
+                                    <th>Sem.</th>
                                     <th>Subject Code</th>
                                     <th>Subject Name</th>
                                     <th>Syllabus</th>
                                     <th>No. of Sets</th>
                                     <th>Last Date for Submission</th>
-                                    <th>No. of Sets Uploaded</th>
-                                    <th>No. of Sets Forwarded</th>
+                                    <th>Sets Prepared</th>
+                                    <th>Sets Forwarded</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -60,16 +60,18 @@
                                 <tr>
                                     <th>Course Name</th>
                                     <th>Year</th>
-                                    <th>Semester</th>
+                                    <th>Sem.</th>
                                     <th>Subject Code</th>
                                     <th>Subject Name</th>
                                     <th>Syllabus</th>
-                                    <th>Set No</th>
-                                    <th>No of bits filled</th>
+                                    <th>Set No.</th>
+                                    <th>Total Bits</th>
+                                    <th>Bits Compl.</th>
+                                    <th>Bits Pending</th>
                                     <th>Status</th>
                                     <th>Preview</th>
                                     <th>QP Authoring</th>
-                                    <th>Forward</th>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -80,29 +82,30 @@
                                     <td th:text="${appointment.subject_code}"></td>
                                     <td th:text="${appointment.subject_name}"></td>
                                     <td>
-                                        <a th:if="${appointment.syllabus}" th:href="@{${appointment.syllabus}}" target="_blank" title="View Syllabus">View Syllabus</a>
+                                        <a th:if="${appointment.syllabus}" th:href="@{${appointment.syllabus}}" target="_blank" title="View Syllabus">View</a>
                                         <span th:unless="${appointment.syllabus}">No syllabus available</span>
                                     </td>
                                     <td th:text="${appointment.setno}"></td>
+                                    <td th:text="${appointment.total_questions}"></td>
                                     <td th:text="${appointment.no_of_questions}"></td>
+                                    <td th:text="${appointment.pending_questions}"></td>
                                     <td th:text="${appointment.qp_status}"></td>
-                                    <td>
+                                    <td th:if="${appointment.no_of_questions != appointment.pending_questions and appointment.qp_status != 'FORWARDED'}">
                                         <a th:href="@{/previewPdf/{id}/{subjectId}(id=${appointment.setno}, subjectId=${appointment.subject_id})}" class="btn btn-sm btn-warning" title="preview" target="_blank">
                                             Preview
                                         </a>
                                     </td>
-                                    <td>
+                                    <td th:if="${appointment.no_of_questions != appointment.pending_questions and appointment.qp_status != 'FORWARDED'}">
                                         <a th:href="@{/bitwisequestionsList(id=${appointment.setno}, subjectId=${appointment.subject_id})}"
                                            class="btn btn-sm btn-info">
                                             QP Authoring
                                         </a>
                                     </td>
-
-                                    <td>
+                                    <td th:if="${appointment.no_of_questions != appointment.pending_questions and appointment.qp_status != 'FORWARDED'}">
                                         <a th:href="@{/forwardQuestions/{id}/{subjectId}(id=${appointment.setno}, subjectId=${appointment.subject_id})}"
                                            class="btn btn-sm btn-warning"
                                            title="Forward Questions">
-                                            Forward
+                                            Forward to Moderator
                                         </a>
                                     </td>
                                 </tr>
