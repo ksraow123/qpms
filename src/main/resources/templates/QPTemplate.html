@@ -138,10 +138,14 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <th:block th:each="entry : ${groupedBySetNo}">
-                                    <h2>Set No: <b th:text="${entry.key}"></b></h2>
+
+                                    <h2>Set No: <b th:text="${setNo}"></b></h2>
                                    <h2> <a th:if="${subject.syllabus}" th:href="@{${subject.syllabus}}" target="_blank" title="View Syllabus">View Syllabus</a>
                                        <span th:unless="${subject.syllabus}">No syllabus available</span></h2>
+
+                                <a th:href="@{/previewPdf/{id}/{subjectId}(id=${setNo}, subjectId=${subject.id})}" class="btn btn-sm btn-warning" title="preview" target="_blank">
+                                    Preview
+                                </a>
                                     <table class="table table-bordered" id="example">
                                         <thead>
                                         <tr>
@@ -153,15 +157,12 @@
                                             <th>Marks</th>
                                             <th>Instructions</th>
                                             <th>Question</th>
-                                            <th>Review status</th>
-                                            <th>Reviewer Remarks</th>
-
                                             <th>Image</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="qpoint, iterStat : ${entry.value}">
+                                        <tr th:each="qpoint, iterStat : ${qPtemplate}">
                                             <td th:text="${iterStat.count}">S.No.</td>
                                             <td th:text="${qpoint.q_no}">Q No</td>
                                             <td th:text="${qpoint.bit_no}">Bit No.</td>
@@ -170,8 +171,6 @@
                                             <td th:text="${qpoint.marks}">Marks</td>
                                             <td th:text="${qpoint.instructions}">Instructions</td>
                                             <td th:utext="${qpoint.q_desc}">Question</td>
-                                            <td th:utext="${qpoint.qp_reviewer_status}">Reviewer Status</td>
-                                            <td th:utext="${qpoint.reviewer_comments}">Comments</td>
                                             <td>
                                                 <img th:if="${qpoint.image_path != null}"
                                                      th:src="'data:image/' + ${qpoint.image_path} + ';base64,' + ${qpoint.image_path}"
@@ -187,24 +186,6 @@
 
                                         </tr>
                                         </tbody>
-
-                                        <th:block th:each="entrydata : ${setSubjects}">
-                                            <div class="col-md-3 bg-light border p-2" th:if="${entrydata.key eq entry.key }">
-<!--                                                <a th:href="@{/forwardQuestions/{id}/{subjectId}(id=${entrydata.key}, subjectId=${subject.id})}"-->
-<!--                                                   class="btn btn-sm btn-warning"-->
-<!--                                                   title="Forward Questions">-->
-<!--                                                    Forward-->
-<!--                                                </a>-->
-
-                                                <a th:href="@{/previewPdf/{id}/{subjectId}(id=${entrydata.key}, subjectId=${subject.id})}" class="btn btn-sm btn-warning" title="preview" target="_blank">
-                                                    Preview
-                                                </a>
-
-                                            </div>
-
-                                        </th:block>
-
-<
                                 </table>
                                 </th:block>
                             </div>

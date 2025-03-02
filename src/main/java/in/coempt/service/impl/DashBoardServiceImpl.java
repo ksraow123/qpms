@@ -21,4 +21,13 @@ public class DashBoardServiceImpl implements DashBoardService {
     public List<QPSetterDashBoardVo> getQPModeratorDashBord(String userName, Long userId) {
         return dashBoardRepository.getModeratorDashBoard(userName,userId);
     }
+    @Override
+    public List<QPSetterDashBoardVo> getSetWiseQPDashBoard(Long userId) {
+        return dashBoardRepository.getSetWiseQPDashBoard(userId);
+    }
+
+    @Override
+    public List<QPSetterDashBoardVo> getSetWiseReviewerQPDashBoard(String userName, Long userId) {
+        return dashBoardRepository.getSetWiseReviewerQPDashBoard(userId);
+    }
 }

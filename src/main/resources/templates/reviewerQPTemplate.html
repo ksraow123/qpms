@@ -131,8 +131,8 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <th:block th:each="entry : ${groupedBySetNo}">
-                                    <h2>Set No: <b th:text="${entry.key}"></b></h2>
+
+                                    <h2>Set No: <b th:text="${setNo}"></b></h2>
                                     <h2> <a th:if="${subject.syllabus}" th:href="@{${subject.syllabus}}" target="_blank" title="View Syllabus">View Syllabus</a>
                                         <span th:unless="${subject.syllabus}">No syllabus available</span></h2>
                                     <table class="table table-bordered" id="example">
@@ -152,7 +152,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="qpoint, iterStat : ${entry.value}">
+                                        <tr th:each="qpoint, iterStat : ${qPtemplate}">
                                             <td th:text="${iterStat.count}">S.No.</td>
                                             <td th:text="${qpoint.q_no}">Q No</td>
                                             <td th:text="${qpoint.bit_no}">Bit No.</td>
@@ -181,29 +181,20 @@
                                         </tr>
                                         </tbody>
 
-
-
-                                        <th:block th:each="entrydata : ${setSubjects}">
-                                            <div class="col-md-3 bg-light border p-2" th:if="${entrydata.key eq entry.key }">
-
-
-                                                <a th:href="@{/previewPdf/{id}/{subjectId}(id=${entrydata.key}, subjectId=${subject.id})}" class="btn btn-sm btn-warning" title="preview" target="_blank">
+                                                <a th:href="@{/previewPdf/{id}/{subjectId}(id=${qPtemplate}, subjectId=${subject.id})}" class="btn btn-sm btn-warning" title="preview" target="_blank">
                                                     Preview
                                                 </a>
                                                 <a href="#" class="btn btn-sm btn-warning" title="Approve"
-                                                   th:data-id="${entrydata.key} + '/' + ${subject.id}"
+                                                   th:data-id="${setNo} + '/' + ${subject.id}"
                                                    onclick="openSetWiseApprovalModal(this,'a')">
                                                     Approve
                                                 </a>
                                                 <a href="#" class="btn btn-sm btn-warning" title="Approve"
-                                                   th:data-id="${entrydata.key} + '/' + ${subject.id}"
+                                                   th:data-id="${setNo} + '/' + ${subject.id}"
                                                    onclick="openSetWiseApprovalModal(this,'r')">
                                                     Reject
                                                 </a>
 
-                                            </div>
-
-                                        </th:block>
                                     </table>
                                 </th:block>
 

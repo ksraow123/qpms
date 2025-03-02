@@ -1,51 +1,58 @@
 document.addEventListener("DOMContentLoaded", function () {
     let courseCodeElement = document.getElementById("courseCode");
-    //let regulationElement = document.getElementById("regulation");
     let subjectDropdown = document.getElementById("subjectCode");
+    let syllabusLink = document.getElementById("syllabusLink");
+    let noSyllabusText = document.getElementById("noSyllabusText");
 
-    if (courseCodeElement  && subjectDropdown) {
+    if (courseCodeElement && subjectDropdown) {
         courseCodeElement.addEventListener("change", function () {
             let courseId = this.value;
-           // let regulation = regulationElement.value;
 
             // Clear existing options
-            subjectDropdown.innerHTML = '<option value="0">Loading...</option>';
-            if (courseId !== "0") {
-                fetch("https://online.ctestservices.com/msbteqp/subjects/"+courseId)
+            subjectDropdown.innerHTML = '<option value="">Loading...</option>';
+
+            if (courseId) {
+                fetch(`https://online.ctestservices.com/msbteqp/subjects/${courseId}`)
                     .then(response => response.json())
                     .then(data => {
-                        subjectDropdown.innerHTML = '<option value="0">Select</option>'; // Reset dropdown
+                        subjectDropdown.innerHTML = '<option value="">Select a Subject</option>'; // Reset dropdown
 
                         data.forEach(subject => {
                             let option = document.createElement("option");
-                            option.value = subject.id;  // Use Subject Code as value
+                            option.value = subject.id;  // Use Subject ID as value
                             option.textContent = `${subject.subjectCode} - ${subject.subject_name}`;  // Display Code & Name
-                           option.setAttribute("data-syllabus", subject.syllabus || "");
+                            option.setAttribute("data-syllabus", subject.syllabus || ""); // Set syllabus URL
                             subjectDropdown.appendChild(option);
                         });
                     })
                     .catch(error => {
                         console.error("Error fetching subjects:", error);
-                        subjectDropdown.innerHTML = '<option value="0">Error Loading Subjects</option>';
+                        subjectDropdown.innerHTML = '<option value="">Error Loading Subjects</option>';
                     });
             } else {
-                subjectDropdown.innerHTML = '<option value="0">Select a Course First</option>';
+                subjectDropdown.innerHTML = '<option value="">Select a Course First</option>';
             }
         });
     }
-subjectDropdown.addEventListener("change", function () {
-        let selectedOption = subjectDropdown.options[subjectDropdown.selectedIndex];
-        let syllabusUrl = selectedOption.getAttribute("data-syllabus");
 
-        if (syllabusUrl) {
-            syllabusLink.href = "../"+syllabusUrl;
-            syllabusLink.style.display = "inline"; // Show link
-            noSyllabusText.style.display = "none"; // Hide "No syllabus available" text
-        } else {
-            syllabusLink.style.display = "none"; // Hide link
-            noSyllabusText.style.display = "inline"; // Show "No syllabus available" text
-        }
-    });
+    if (subjectDropdown) {
+        subjectDropdown.addEventListener("change", function () {
+            let selectedOption = subjectDropdown.options[subjectDropdown.selectedIndex];
+            let syllabusUrl = selectedOption.getAttribute("data-syllabus");
+
+            if (syllabusLink && noSyllabusText) {
+                if (syllabusUrl) {
+                    syllabusLink.href = "../" + syllabusUrl;
+                    syllabusLink.style.display = "inline"; // Show link
+                    noSyllabusText.style.display = "none"; // Hide "No syllabus available" text
+                } else {
+                    syllabusLink.style.display = "none"; // Hide link
+                    noSyllabusText.style.display = "inline"; // Show "No syllabus available" text
+                }
+            }
+        });
+    }
+
     // Sidebar Toggle
     let toggleButton = document.querySelector(".toggle-btn");
     let sidebar = document.querySelector("#sidebar");
