@@ -17,8 +17,9 @@ public class PasswordController {
     private UserService userService;
 
     @GetMapping("/change")
-    public String showChangePasswordForm() {
-        return "change-password";
+    public String showChangePasswordForm(Model model) {
+        model.addAttribute("page","changepwd");
+        return "main";
     }
 
     @PostMapping("/change")

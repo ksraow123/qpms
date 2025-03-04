@@ -11,11 +11,15 @@ import in.coempt.util.SecurityUtil;
 import in.coempt.vo.ProfileDetailsVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -58,4 +62,18 @@ model.addAttribute("page","profileDetails");
         profileDetailsRepository.save(detailsEntity);
         return "redirect:/viewProfile";
     }
-}
+
+    @GetMapping("/api/bank/getDetails/{ifsc}")
+    @ResponseBody
+        public String getBankDetails(@PathVariable("ifsc") String ifscCode) {
+            String url = "https://ifsc.razorpay.com/" + ifscCode; // Example: https://ifsc.razorpay.com/SBIN0005943
+            RestTemplate restTemplate = new RestTemplate();
+
+            try {
+                ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+                return response.getBody();
+            } catch (Exception e) {
+                return "Invalid IFSC Code or API issue";
+            }
+        }
+    }

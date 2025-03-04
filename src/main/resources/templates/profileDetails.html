@@ -10,6 +10,12 @@
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <div class="mb-3">
+                                <label for="" class="form-label">User ID</label>
+                                <input class="form-control" type="text" th:field="*{user_name}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
                                 <label for="" class="form-label">First Name</label>
                                 <input class="form-control" type="text" th:field="*{first_name}" readonly>
                             </div>
@@ -41,13 +47,13 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="" class="form-label">Teaching Experience</label>
+                                <label for="" class="form-label">Teaching Exp. (In Years and Months)</label>
                                 <input class="form-control" type="text" th:field="*{teaching_experience}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="" class="form-label">Industry Experience</label>
+                                <label for="" class="form-label">Industry Exp. (In Years and Months)</label>
                                 <input class="form-control" type="text" th:field="*{industry_experience}">
                             </div>
                         </div>
@@ -60,22 +66,23 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
+                                <label for="" class="form-label">IFSC Code </label>
+                                <input class="form-control" type="text" th:field="*{ifsc_code}" onblur="fetchBankDetails()">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
                                 <label for="" class="form-label">Bank Name</label>
-                                <input class="form-control" type="text" th:field="*{bank_name}">
+                                <input class="form-control" readonly  type="text" th:field="*{bank_name}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="" class="form-label">Branch Details </label>
-                                <input class="form-control" type="text" th:field="*{branch_details}">
+                                <input class="form-control"  readonly type="text" th:field="*{branch_details}">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="" class="form-label">IFSC Code </label>
-                                <input class="form-control" type="text" th:field="*{ifsc_code}">
-                            </div>
-                        </div>
+
 
 
                         <div class="col-md-12">
@@ -89,3 +96,35 @@
         </div>
     </div>
 </div>
+<script>
+function fetchBankDetails() {
+var ifscCode = document.getElementById("ifsc_code").value.trim(); // Trim spaces
+
+if (ifscCode.length !== 11) {
+alert("IFSC Code must be exactly 11 characters.");
+return;
+}
+
+fetch("https://online.ctestservices.com/msbteqp/api/bank/getDetails/" + ifscCode)
+.then(response => {
+if (!response.ok) {
+throw new Error("Invalid IFSC Code or API error");
+}
+return response.json();
+})
+.then(data => {
+if (data && data.BANK && data.BRANCH) {
+document.getElementById("bank_name").value = data.BANK;
+document.getElementById("branch_details").value = Object.entries(data)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(", ");
+} else {
+alert("Invalid IFSC Code or no data found.");
+}
+})
+.catch(error => {
+console.error("Error:", error);
+alert("Error fetching bank details. Please check the IFSC code.");
+});
+}
+</script>

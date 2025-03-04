@@ -38,7 +38,7 @@ public class User {
 	@Column(name = "is_active", nullable = false, length = 20)
 	private int isActive;
 	private String resetToken;
-	@Column(name = "mobile_no", nullable = false, length = 20)
+	@Column(name = "mobile_no", nullable = false, length = 20, unique = true)
 	private String mobileNo;
 	private LocalDateTime tokenExpiry;
 }

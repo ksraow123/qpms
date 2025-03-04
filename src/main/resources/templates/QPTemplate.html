@@ -66,10 +66,9 @@
                     <div class="cards">
                         <div class="card border-0">
                             <h2>
-                                <span th:text="${subject.subjectCode}"> </span>-
-                                <span th:text="${subject.subject_name}"></span>
-                               <a th:if="${subject.syllabus}" th:href="@{${subject.syllabus}}" target="_blank" title="View Syllabus">(View Syllabus)</a>
-                                    <span th:unless="${subject.syllabus}">(No syllabus available)</span> :  Max Marks:<span th:text="${subject.max_marks}"></span>
+                                <span th:text="${subject.subjectCode}"> </span> - <span th:text="${subject.subject_name}"></span><br />
+                              <small> <a th:if="${subject.syllabus}" th:href="@{${subject.syllabus}}" target="_blank" title="View Syllabus" class="text-link">View Syllabus</a>
+                                    <span th:unless="${subject.syllabus}">(No syllabus available)</span> |  Max. Marks:<span th:text="${subject.max_marks}"></span></small>
                             </h2>
 
                             <!-- Modal or Form Container -->
